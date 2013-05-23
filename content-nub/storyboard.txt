@@ -1,0 +1,9 @@
+1) Overall
+2) Zoom + rotate to nub
+3) Slide nub to square
+4) Crossfade nub w/ overflowing nub content (keep borders visible)
+5) Fade overflowing nub content
+6) Start overflowing content at 0, 0
+  6a) Translate to x, 0
+  6b) Rotate 45deg
+7) Back to 1)
