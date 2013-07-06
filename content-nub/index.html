@@ -47,13 +47,24 @@
 		vertLines.appendChild(createVertLine(i));
 	}
 	
+	example.appendChild(horizLines);
+	example.appendChild(vertLines);
+	
+	
+	var xSegment = createSegment(120, 88, 164, 4);
+	var xLabel = createLabel(132, 64, 'x');
+	var sqrtXSegment = createSegment(208, -10, 116, 4);
+	var sqrtXLabel = createLabel(216, -80, '<div>x</div><div>&radic;2</div>');
+	
+	[xSegment, xLabel, sqrtXSegment, sqrtXLabel].forEach(function(el) {
+		example.appendChild(el);
+	});
+	
+	
 	var drawGridLines = new ParGroup([
   	makeOpaqueAnim(horizLines, 2),
   	makeOpaqueAnim(vertLines, 2)
 	]);
-	
-	example.appendChild(horizLines);
-	example.appendChild(vertLines);
 	
 	
 	var overflowVisibleNub = new ParGroup([
@@ -72,15 +83,7 @@
 		(new Animation(cardContent, {'opacity': ['1', '.2']}, {duration: 1, timingFunction: 'ease-out'}))
 	]);
 	
-	var xSegment = createSegment(120, 88, 164, 4);
-	var xLabel = createLabel(132, 64, 'x');
-	var sqrtXSegment = createSegment(208, -10, 116, 4);
-	var sqrtXLabel = createLabel(216, -80, '<div>x</div><div>&radic;2</div>');
-	
 	opacityAnims = [];
-	[xSegment, xLabel, sqrtXSegment, sqrtXLabel].forEach(function(el) {
-		example.appendChild(el);
-	});
 	
 	var showLabels = new ParGroup([
 		(new ParGroup([
@@ -88,8 +91,8 @@
 			(new Animation(xSegment, {
 				transform: ['translateX(41px) scale(.01, .5)', 'scale(.5)']
 			}, {duration: .4, timingFunction: 'ease-in-out'})),
+			makeOpaqueAnim(xLabel, {duration: .2, startDelay: .2}), 
 			(new Animation(xLabel, {
-				opacity: ['0', '1', '1', '1'],
 				transform: ['scale(.01)','scale(.4)','scale(.56)','scale(.47)','scale(.5)']
 			}, {duration: .6, startDelay: .2, timingFunction: 'ease-in-out'}))
 		])),
@@ -98,8 +101,8 @@
 			(new Animation(sqrtXSegment, {
 				transform: ['rotate(45deg) translateX(29px) scale(.01, .5)', 'rotate(45deg) scale(.5)']
 			}, {duration: .4, timingFunction: 'ease-in-out'})),
+			makeOpaqueAnim(sqrtXLabel, {duration: .2, startDelay: .2}), 
 			(new Animation(sqrtXLabel, {
-				opacity: ['0', '1', '1', '1'],
 				transform: ['scale(.01)','scale(.4)','scale(.56)','scale(.47)','scale(.5)']
 			}, {duration: .6, startDelay: .2, timingFunction: 'ease-in-out'}))
 		], {startDelay: .6}))
@@ -140,14 +143,14 @@
 	  (new Animation(
   	  nubContentCopy,
   	  {
-  	    opacity: ['.2', '.75'],
+  	    opacity: ['.2', '.6'],
   	    transform: ['', 'translate3d(200px, 0, 0) rotate(-45deg)']
   		}, {duration: 1.75, timingFunction: 'ease-in-out'}
   	)),
 	  (new Animation(
   	  nubClip,
   	  {
-  	    opacity: ['1', '.75']
+  	    opacity: ['1', '.6']
   		}, {duration: .75, timingFunction: 'ease-in-out'}
   	)),
 	  (new Animation(
@@ -183,19 +186,19 @@
   	(new ParGroup([
     	(new Animation(
     	  nubContentCopy,
-    	  {opacity: ['.75', '.5']},
+    	  {opacity: ['.6', '.3']},
     	  {iterationCount: 3, direction: 'alternate', duration: .5, timingFunction: 'ease-in-out'}
     	)),
     	(new Animation(
     	  nubClip,
-    	  {opacity: ['.75', '1']},
+    	  {opacity: ['.6', '1']},
     	  {iterationCount: 3, direction: 'alternate', duration: .5, timingFunction: 'ease-in-out'}
     	))
   	])),
   	(new ParGroup([
     	(new Animation(
     	  nubContentCopy,
-    	  {opacity: ['.5', '0']},
+    	  {opacity: ['.3', '0']},
     	  {duration: .5, timingFunction: 'ease-in-out'}
     	)),
       (new Animation(
@@ -215,20 +218,35 @@
       	}, 
       	{duration: 2, timingFunction: 'ease-in-out'}
     	)),
-    	makeTransparentAnim(horizLines, 2),
-    	makeTransparentAnim(vertLines, 2)
+    	makeTransparentAnim(horizLines, 1.25),
+    	makeTransparentAnim(vertLines, 1.25)
   	]))
 	]);
 	
 	var steps = [rotateToNub, rotateFromNub, showContentCopy, contentInitial, slideContent];
 	var i = 0;
+	var direction = 1;
+	var firstPass = true;
 	
   figure.addEventListener('click', function() {
-  	if (i < steps.length) {
-		  document.timeline.play(steps[i++]);
-		} else {
-			i = 0;
+  	if (i >= steps.length || i < 0) {
+			direction = -1 * direction;
+  	  i += direction;
+  	  firstPass = false;
 		}
+  	console.log('play '+i);
+  	var step = steps[i];
+  	if (!firstPass) {
+  	  var timing = step.timing._timing;
+    	var animDirection = timing.direction;
+    	if (animDirection === 'normal') {
+      	timing.direction = 'reverse';
+    	} else if (animDirection === 'reverse') {
+      	timing.direction = 'normal';
+    	}
+  	}
+	  document.timeline.play(step);
+	  i += direction;
   });
 
 </script>
