@@ -4,12 +4,15 @@
 	<title>Content-filled dialog nubs in CSS</title>
 	<link rel="stylesheet" href="example.css" />
 	<script src="web-animations.js"></script>
-	<script src="example.js"></script>
+	<script src="prefixfree.min.js"></script>
+	<script src="utils.js"></script>
+	<script src="content-nub-slideshow.js"></script>
 </head>
 <body>
 
-<figure>
-	<div id="example">
+<figure id="example">
+	<div class="card-example">
+  	<div class="card-example-grid"></div>
 		<section class="card">
 			<div class="card-nub">
 				<div class="card-nub-clip">
@@ -28,222 +31,27 @@
 </figure>
 
 <script>
-	var figure = document.querySelector('figure');
-	var example = document.querySelector('#example');
-	var nub = document.querySelector('#example .card-nub');
-	var nubClip = document.querySelector('#example .card-nub-clip');
-	var nubPic = document.querySelector('#example .card-nub-pic');
-	var nubContentCopy = document.querySelector('#example .card-nub-content-copy');
-	var cardContent = document.querySelector('#example .card-content');
 	
-	// Grid lines
-	var horizLines = document.createElement('div');
-	horizLines.className = 'horiz-line-container';
-	var vertLines = document.createElement('div');
-	vertLines.className = 'vert-line-container';
-	
-	for (var i = 0; i <= 1600; i += 40) {
-		horizLines.appendChild(createHorizLine(i));	
-		vertLines.appendChild(createVertLine(i));
-	}
-	
-	example.appendChild(horizLines);
-	example.appendChild(vertLines);
-	
-	
-	var xSegment = createSegment(120, 88, 164, 4);
-	var xLabel = createLabel(132, 64, 'x');
-	var sqrtXSegment = createSegment(208, -10, 116, 4);
-	var sqrtXLabel = createLabel(216, -80, '<div>x</div><div>&radic;2</div>');
-	
-	[xSegment, xLabel, sqrtXSegment, sqrtXLabel].forEach(function(el) {
-		example.appendChild(el);
-	});
-	
-	
-	var drawGridLines = new ParGroup([
-  	makeOpaqueAnim(horizLines, 2),
-  	makeOpaqueAnim(vertLines, 2)
-	]);
-	
-	
-	var overflowVisibleNub = new ParGroup([
-		(new Animation(nub, {'overflow': 'visible'}, 0)),
-		(new Animation(nubPic, {
-			'height': ['80px', '160px']
-		}, {duration: 1, timingFunction: 'ease-in'}))
-	]);
-	
-	var rotateToNub = new ParGroup([
-		drawGridLines,
-		overflowVisibleNub,
-		(new Animation(example, {
-			'transform': ['', 'translate3d(440px, -440px, 0) scale(2) rotate(-45deg)']
-		}, {duration: 2, timingFunction: 'ease-in-out'})),
-		(new Animation(cardContent, {'opacity': ['1', '.2']}, {duration: 1, timingFunction: 'ease-out'}))
-	]);
-	
-	opacityAnims = [];
-	
-	var showLabels = new ParGroup([
-		(new ParGroup([
-			makeOpaqueAnim(xSegment, .25), 
-			(new Animation(xSegment, {
-				transform: ['translateX(41px) scale(.01, .5)', 'scale(.5)']
-			}, {duration: .4, timingFunction: 'ease-in-out'})),
-			makeOpaqueAnim(xLabel, {duration: .2, startDelay: .2}), 
-			(new Animation(xLabel, {
-				transform: ['scale(.01)','scale(.4)','scale(.56)','scale(.47)','scale(.5)']
-			}, {duration: .6, startDelay: .2, timingFunction: 'ease-in-out'}))
-		])),
-		(new ParGroup([
-			makeOpaqueAnim(sqrtXSegment, .25), 
-			(new Animation(sqrtXSegment, {
-				transform: ['rotate(45deg) translateX(29px) scale(.01, .5)', 'rotate(45deg) scale(.5)']
-			}, {duration: .4, timingFunction: 'ease-in-out'})),
-			makeOpaqueAnim(sqrtXLabel, {duration: .2, startDelay: .2}), 
-			(new Animation(sqrtXLabel, {
-				transform: ['scale(.01)','scale(.4)','scale(.56)','scale(.47)','scale(.5)']
-			}, {duration: .6, startDelay: .2, timingFunction: 'ease-in-out'}))
-		], {startDelay: .6}))
-	]);
-	
-	var rotateFromNub = new SeqGroup([
-		(new ParGroup([
-			(new Animation(nubPic, {
-				height: ['160px', '80px']
-			}, {duration: .75, timingFunction: 'ease-out'})),
-			(new Animation(example, {
-				transform: [
-					'translate3d(440px, -440px, 0) scale(2) rotate(-45deg)',
-					'translate3d(1160px, 600px, 0) scale(3) '
-				]
-			}, {duration: 1, timingFunction: 'ease-in-out'}))
-		])),
-		showLabels
-	]);
-	
-	var showContentCopy = new ParGroup([
-		makeTransparentAnim(xSegment, .5),
-		makeTransparentAnim(sqrtXSegment, .5),
-		makeTransparentAnim(xLabel, .5),
-		makeTransparentAnim(sqrtXLabel, .5),
-		makeTransparentAnim(cardContent, 1),
-    (new Animation(cardContent, {
-			opacity: ['.2', '0']
-		}, .75)),
-    (new Animation(nubContentCopy, {
-			opacity: ['0', '.3']
-		}, {duration: 1, timingFunction: 'ease-in-out'}))
-	]);
-	
-	var slideVal = 200/Math.SQRT2;
-	
-	var contentInitial = new ParGroup([
-	  (new Animation(
-  	  nubContentCopy,
-  	  {
-  	    opacity: ['.2', '.6'],
-  	    transform: ['', 'translate3d(200px, 0, 0) rotate(-45deg)']
-  		}, {duration: 1.75, timingFunction: 'ease-in-out'}
-  	)),
-	  (new Animation(
-  	  nubClip,
-  	  {
-  	    opacity: ['1', '.6']
-  		}, {duration: .75, timingFunction: 'ease-in-out'}
-  	)),
-	  (new Animation(
-  	  nubContentCopy,
-  	  {
-  	    transform: [
-  	      '', 
-  	      'translate3d('+slideVal+'px, -'+slideVal+'px, 0) rotate(-45deg)'
-  	     ]
-  		}, {duration: .75, timingFunction: 'ease-in-out'}
-  	))
-	]);
-	
-	slideContent = new SeqGroup([
-  	(new Animation(
-  	  nubContentCopy,
-  	  {
-  	    transform: [
-  	      'translate3d('+slideVal+'px, -'+slideVal+'px, 0) rotate(-45deg)',
-  	      'translate3d(0, 0, 0) rotate(-45deg)'
-  	     ]
-  		}, {duration: .75, timingFunction: 'ease-in-out'}
-  	)),
-  	(new Animation(
-  	  nubContentCopy,
-  	  {
-  	    transform: [
-  	      'rotate(-45deg)',
-  	      ''
-  	     ]
-  		}, {duration: 1, timingFunction: 'ease-out'}
-  	)),
-  	(new ParGroup([
-    	(new Animation(
-    	  nubContentCopy,
-    	  {opacity: ['.6', '.3']},
-    	  {iterationCount: 3, direction: 'alternate', duration: .5, timingFunction: 'ease-in-out'}
-    	)),
-    	(new Animation(
-    	  nubClip,
-    	  {opacity: ['.6', '1']},
-    	  {iterationCount: 3, direction: 'alternate', duration: .5, timingFunction: 'ease-in-out'}
-    	))
-  	])),
-  	(new ParGroup([
-    	(new Animation(
-    	  nubContentCopy,
-    	  {opacity: ['.3', '0']},
-    	  {duration: .5, timingFunction: 'ease-in-out'}
-    	)),
-      (new Animation(
-        cardContent, 
-        {opacity: ['0', '1']},
-    		{duration: .5, timingFunction: 'ease-in-out'}
-  		))
-  	])),
-  	(new ParGroup([
-    	(new Animation(
-    	  example, 
-    	  {
-          transform: [
-      			'translate3d(1160px, 600px, 0) scale(3)',
-      			''
-      		]
-      	}, 
-      	{duration: 2, timingFunction: 'ease-in-out'}
-    	)),
-    	makeTransparentAnim(horizLines, 1.25),
-    	makeTransparentAnim(vertLines, 1.25)
-  	]))
-	]);
-	
-	var steps = [rotateToNub, rotateFromNub, showContentCopy, contentInitial, slideContent];
+	var steps = initAnimations();
 	var i = 0;
 	var direction = 1;
 	var firstPass = true;
 	
-  figure.addEventListener('click', function() {
+  document.getElementById('example').addEventListener('click', function() {
   	if (i >= steps.length || i < 0) {
 			direction = -1 * direction;
   	  i += direction;
   	  firstPass = false;
+  	  var labels = document.querySelectorAll('.segment, .segment-label');
+  	  console.log(labels);
+  	  labels.forEach(function(label) {
+    	  label.style.display = 'none';
+  	  });
 		}
   	console.log('play '+i);
   	var step = steps[i];
   	if (!firstPass) {
-  	  var timing = step.timing._timing;
-    	var animDirection = timing.direction;
-    	if (animDirection === 'normal') {
-      	timing.direction = 'reverse';
-    	} else if (animDirection === 'reverse') {
-      	timing.direction = 'normal';
-    	}
+  	  invertAnimationDirection(step);
   	}
 	  document.timeline.play(step);
 	  i += direction;

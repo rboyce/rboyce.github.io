@@ -1,20 +1,22 @@
 figure {
-	background: #c0bea9;
-	/*
-	background: #4b6bb0;
-	*/
+	background: #c9c9c0;
 	height: 920px;
 	overflow: hidden;
 	position: relative;
-	
-	-webkit-transform: scale(.5);
-	
-	-webkit-transform-origin: 0 0;
+	transform: scale(.5);
+	transform-origin: 0 0;
 	user-select: none;
-	width: 1600px;
+	width: 2400px;
 }
 
-#example {
+figure::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 0; right: 0;
+  box-shadow: 0 0 100px 100px #c9c9c0;
+}
+
+.card-example {
 	font-family: Helvetica, Arial, sans-serif;
 	height: 520px;
 	left: 50%;
@@ -23,6 +25,18 @@ figure {
 	top: 50%;
 	width: 1200px;
 }
+
+.card-example-grid {
+  background-image: url('grid-80.png');
+  background-size: 40px 40px;
+  opacity: 0;
+  position: absolute;
+  top: -320px;
+  bottom: -320px;
+  left: -600px;
+  right: -600px;
+}
+
 
 .card-nub,
 .card-content,
@@ -44,8 +58,8 @@ figure {
 	overflow: hidden;
 	position: absolute;
 	top: 0;
-	-webkit-transform: rotate(45deg);
-	-webkit-transform-origin: 0 0;
+	transform: rotate(45deg);
+	transform-origin: 0 0;
 	width: 114px; /* 80 * sqrt(2) */
 }
 
@@ -60,13 +74,13 @@ figure {
 	width: 1200px;
   height: 520px;
   opacity: 0;
-	-webkit-transform-origin: 200px 0;
+	transform-origin: 200px 0;
 }
 
 .card-nub-pic {
 	height: 100%;
-	-webkit-transform: rotate(-45deg) translateX(-200px);
-	-webkit-transform-origin: 0 0;
+	transform: rotate(-45deg) translateX(-200px);
+	transform-origin: 0 0;
 	width: 1200px;
 }
 
@@ -113,34 +127,24 @@ figure {
 }
 
 .line {
-	background: rgba(255, 255, 255, .4);
-	position: absolute;
-	min-height: 2px;
-	min-width: 2px;
-	margin-top: -1px;
-	margin-left: -1px;
-}
-
-.horiz-line-container,
-.vert-line-container {
-	bottom: -200px;
-	left: -200px;
-	opacity: 0;
-	pointer-events: none;
-	position: absolute;
-	right: -200px;
-	top: -200px;
-	-webkit-transform: translate3d(0, 0, 0);
-	z-index: -1;
+  background: rgba(255, 255, 255, .4);
+  position: absolute;
+  min-height: 2px;
+  min-width: 2px;
+  margin-top: -1px;
+  margin-left: -1px;
 }
 
 .segment {
+  position: absolute;
+  min-height: 2px;
+  min-width: 2px;
 	background: #fff;
 	border-radius: 200px;
 	box-shadow: 0 0 4px rgba(0, 0, 0, .6);
 	opacity: 0;
-	-webkit-transform: scale(.5);
-	-webkit-transform-origin: 0 0;
+	transform: scale(.5);
+	transform-origin: 0 0;
 }
 
 .segment-label {
@@ -149,7 +153,11 @@ figure {
 	opacity: 0;
 	position: absolute;
 	top: 20px;
-	-webkit-transform: scale(.5);
+	transform: scale(.5);
+}
+
+.rotate45 {
+  transform: rotate(45deg) scale(.5);
 }
 
 .segment-label > span {

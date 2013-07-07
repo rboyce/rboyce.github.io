@@ -51,3 +51,16 @@ function makeOpaqueAnim(element, duration) {
 function makeTransparentAnim(element, duration) {
 	return (new Animation(element, {opacity: ['1', '0']}, duration));
 }
+
+function invertAnimationDirection(anim) {
+  if (!anim || !anim.timing) {
+    return;
+  }
+  var timing = anim.timing._timing;
+	var animDirection = timing.direction;
+	if (animDirection === 'normal') {
+  	timing.direction = 'reverse';
+	} else if (animDirection === 'reverse') {
+  	timing.direction = 'normal';
+	}
+}
