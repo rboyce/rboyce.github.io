@@ -1,0 +1,12 @@
+{
+  "client_id": "https://rboyce.github.io/blueglass/oauth-client-metadata.json",
+  "client_name": "Blueglass",
+  "client_uri": "https://rboyce.github.io/blueglass/",
+  "redirect_uris": ["io.github.rboyce:/oauth/callback"],
+  "scope": "atproto transition:generic transition:email transition:chat.bsky",
+  "token_endpoint_auth_method": "none",
+  "response_types": ["code"],
+  "grant_types": ["authorization_code", "refresh_token"],
+  "application_type": "native",
+  "dpop_bound_access_tokens": true
+}
